@@ -34,7 +34,7 @@ function Sidedata({ data1, setdata, data, setdataofmu }) {
                             <Box sx={{ color: "white", paddingLeft: "20px", fontSize: "20px", marginBottom: "10px" }}>
                                 Popular music:
                             </Box>
-                            <Swiper style={{ width: window.innerWidth - 370 }} watchSlidesProgress={true} slidesPerView={5} className="mySwiper">
+                            <Swiper style={{ width: window.innerWidth - 370 }} watchSlidesProgress={true} slidesPerView={window.innerWidth<400?2:5} className="mySwiper">
                                 {
                                     data1.map((item1) => (
                                         item1.listofmusic.map((item) => (
