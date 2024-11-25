@@ -8,17 +8,22 @@ import PlayArrowIcon from '@mui/icons-material/PlayArrow';
 import PauseIcon from '@mui/icons-material/Pause';
 import FastRewindIcon from '@mui/icons-material/FastRewind';
 import FastForwardIcon from '@mui/icons-material/FastForward';
+import { BsThreeDots } from "react-icons/bs";
+import Menu from '@mui/material/Menu';
+import MenuItem from '@mui/material/MenuItem';
+import AddIcon from '@mui/icons-material/Add';
+import axios from 'axios';
 
 function Cantrol({ dataofmu, setchengmusic, id }) {
-console.log(id);
-
     const [data, setData] = useState(dataofmu);
     const [audioDuration, setAudioDuration] = useState(null); // Audio duration
     const [volumeValue, setVolumeValue] = useState(50); // Volume level
     const [isPlaying, setIsPlaying] = useState(true); // Is the audio playing?
     const [currentTime, setCurrentTime] = useState(0); // Track current time of audio
     const audioRef = useRef(null); // Ref for the audio element
-
+    const [anchorEl, setAnchorEl] = useState(null);
+    const open = Boolean(anchorEl);
+    const authToken = window.localStorage.getItem("auto")
     useEffect(() => {
         setData(null);
         setTimeout(() => {
@@ -91,6 +96,36 @@ console.log(id);
         }
     };
 
+    const handleClick = (event) => {
+        setAnchorEl(event.currentTarget);
+    };
+
+    const handleClose = () => {
+        setAnchorEl(null);
+    };
+
+    const handleAddClick = async () => {
+        console.log('Music ID:', id);
+    
+        try {
+            const response = await axios.post(
+                `http://localhost:3005/profile/addinlist`,
+                {id:id}, // Empty object for the request body
+                {
+                    headers: {
+                        'Authorization': authToken, // Pass headers in the correct place
+                    },
+                }
+            );
+            console.log(response.data);
+        } catch (error) {
+            console.error('Error fetching data:', error);
+        }
+    
+        handleClose();
+    };
+    
+
     return (
         <>
             {data && (
@@ -109,27 +144,27 @@ console.log(id);
                         flexDirection: { xs: 'column', sm: 'row' }
                     }}
                 >
-                    <Box sx={{ 
-                        marginLeft: { xs: "0px", sm: "20px" }, 
-                        display: "flex", 
-                        alignItems: "center", 
+                    <Box sx={{
+                        marginLeft: { xs: "0px", sm: "20px" },
+                        display: "flex",
+                        alignItems: "center",
                         width: "100%",
                         flexDirection: { xs: 'column', sm: 'row' }
                     }}>
-                        <Box sx={{ 
-                            width: { xs: "100%", sm: "30%" }, 
-                            display: "flex", 
+                        <Box sx={{
+                            width: { xs: "100%", sm: "30%" },
+                            display: "flex",
                             alignItems: "center",
                             marginBottom: { xs: '10px', sm: '0' }
                         }}>
-                            <Box component="img" 
-                                sx={{ width: { xs: "50px", sm: "70px" } }} 
-                                src={data.img} 
-                                alt={data.name} 
+                            <Box component="img"
+                                sx={{ width: { xs: "50px", sm: "70px" } }}
+                                src={data.img}
+                                alt={data.name}
                             />
-                            <Box sx={{ 
-                                color: "white", 
-                                fontSize: { xs: "16px", sm: "20px" }, 
+                            <Box sx={{
+                                color: "white",
+                                fontSize: { xs: "16px", sm: "20px" },
                                 marginLeft: "20px",
                                 whiteSpace: 'nowrap',
                                 overflow: 'hidden',
@@ -145,15 +180,15 @@ console.log(id);
                             </Box>
                         </Box>
 
-                        <Box sx={{ 
+                        <Box sx={{
                             width: { xs: "100%", sm: "50%" },
                             marginBottom: { xs: '10px', sm: '0' }
                         }}>
                             {data && (
-                                <MusicControl 
-                                    time={audioDuration ? audioDuration.toFixed(2) : 'Loading...'} 
-                                    currentTime={currentTime} 
-                                    onSliderChange={handleSliderChange} 
+                                <MusicControl
+                                    time={audioDuration ? audioDuration.toFixed(2) : 'Loading...'}
+                                    currentTime={currentTime}
+                                    onSliderChange={handleSliderChange}
                                 />
                             )}
                             <Box sx={{ display: "flex", alignItems: "center", justifyContent: "center" }}>
@@ -169,9 +204,9 @@ console.log(id);
                             </Box>
                         </Box>
 
-                        <Box sx={{ 
-                            display: "flex", 
-                            color: "white", 
+                        <Box sx={{
+                            display: "flex",
+                            color: "white",
                             alignItems: "center",
                             justifyContent: { xs: 'center', sm: 'flex-start' },
                             width: { xs: '100%', sm: 'auto' }
@@ -191,13 +226,38 @@ console.log(id);
                                 valueLabelDisplay="auto"
                                 value={volumeValue}
                                 onChange={handleVolumeChange}
-                                sx={{ 
-                                    width: { xs: "150px", sm: "100px" }, 
-                                    marginLeft: "15px", 
-                                    color: "white" 
+                                sx={{
+                                    width: { xs: "150px", sm: "100px" },
+                                    marginLeft: "15px",
+                                    color: "white"
                                 }}
                             />
                         </Box>
+                        <>
+                            <BsThreeDots
+                                style={{ marginLeft: "20px", color: "white", fontSize: "25px", cursor: "pointer" }}
+                                onClick={handleClick}
+                            />
+                            <Menu
+                                anchorEl={anchorEl}
+                                open={open}
+                                onClose={handleClose}
+                                anchorOrigin={{
+                                    vertical: 'top',
+                                    horizontal: 'left',
+                                }}
+                                transformOrigin={{
+                                    vertical: 'bottom',
+                                    horizontal: 'left',
+                                }}
+                                sx={{ zIndex: "9999" }}
+                            >
+                                <MenuItem onClick={handleAddClick}>
+                                    <AddIcon sx={{ mr: 1 }} />
+                                    Add to Playlist
+                                </MenuItem>
+                            </Menu>
+                        </>
                     </Box>
                 </Box>
             )}

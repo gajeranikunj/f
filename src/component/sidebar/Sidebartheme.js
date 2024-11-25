@@ -7,11 +7,11 @@ import { IoMdAdd } from "react-icons/io";
 import { Box } from '@mui/material';
 import { Link } from 'react-router-dom';
 
-function Sidebartheme() {
+function Sidebartheme({publicsong}) {
     const [activeIndex, setActiveIndex] = useState(0);
     const ch = window.localStorage.getItem("auto");
     var sidebardata = [];
-    if (ch) {
+    if (publicsong) {
         sidebardata = [
             {
                 name: "home",

@@ -366,7 +366,7 @@ const Mainbody = () => {
       <Box sx={{ display: 'flex', justifyContent: 'end' }}>
         <CssBaseline />
         <Main open={open} sx={{ maxWidth: "100%", flexDirection: { xs: "column-reverse", md: "row" } }}>
-          <Sidebartheme />
+          <Sidebartheme publicsong={userdata?.profile?.publicsong || false} />
           <Box sx={{ width: "100%", height: "100%", overflow: "auto" }}>
             <Outlet />
           </Box>

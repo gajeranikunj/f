@@ -19,19 +19,20 @@ function EditProfile({ isSm, userdata }) {
 
     useEffect(() => {
         if (userdata?.profile) {
-            // Check if any field has been modified
-            const hasChanges = Object.keys(profile).some(key => profile[key] !== userdata?.profile?.[key]);
-            setIsSaveDisabled(!hasChanges); // Disable save button if no changes or publicSong is true
-            console.log(publicSong);
+            // Check if any profile field has changed
+            const hasProfileChanges = Object.keys(profile).some(
+                key => profile[key] !== (userdata?.profile?.[key] || "")
+            );
 
-            if (publicSong) {
-                // Check if all required fields are filled before saving changes
-                if (profile.name == "" || profile.about == "" || profile.country == "" || profile.email == "") {
-                    setIsSaveDisabled(true); // Disable save button if any required field is empty and publicSong is true
-                }
-            }
+            // Check if images have changed
+            const hasImageChanges = 
+                (img !== userdata?.profile?.img) || 
+                (bgimg !== userdata?.profile?.bgimg);
+
+            // Enable save button only if there are any changes
+            setIsSaveDisabled(!(hasProfileChanges || hasImageChanges));
         }
-    }, [profile, userdata, publicSong]);
+    }, [profile, img, bgimg, userdata]);
 
     const handleImageChange = (event) => {
         console.log(event.target.files);
@@ -88,8 +89,11 @@ function EditProfile({ isSm, userdata }) {
     };
 
     const handleInputChange = (e, field) => {
-        const value = e.target.value.trim() === '' ? null : e.target.value;
-        setProfile({ ...profile, [field]: value || "" });
+        const value = e.target.value;
+        setProfile(prev => ({
+            ...prev,
+            [field]: value
+        }));
     };
 
     const handleSaveChanges = () => {

@@ -16,7 +16,7 @@ function Settings({ isSm, userdata }) {
     }, [state, userdata]);
 
     function checkProfileDataFilled() {
-        if (profiledata && profiledata.name && profiledata.img && profiledata.country && profiledata.email && profiledata.about) {
+        if (profiledata && profiledata.name && profiledata.img && profiledata.bgimg && profiledata.country && profiledata.email && profiledata.about) {
             setState(!state);
         } else {
             alert("To do this, make sure your profile data is filled");

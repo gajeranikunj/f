@@ -47,7 +47,6 @@ function Sidedata({ data1, setdata, data, setdataofmu ,musiclist}) {
                                             </SwiperSlide>
                                     ))
                                 }
-
                             </Swiper>
 
                         </Box>
