@@ -34,6 +34,8 @@ function EditProfile({ isSm, userdata }) {
     }, [profile, userdata, publicSong]);
 
     const handleImageChange = (event) => {
+        console.log(event.target.files);
+
         const file = event.target.files[0];
         if (file) {
             if (!['image/jpeg', 'image/png', 'image/jpg'].includes(file.type) || file.size > 5 * 1024 * 1024) {
@@ -50,7 +52,9 @@ function EditProfile({ isSm, userdata }) {
         }
         setIsSaveDisabled(false);
     };
+
     const handleBgImageChange = (event) => {
+        console.log(event.target.files);
         const file = event.target.files[0];
         if (file) {
             if (!['image/jpeg', 'image/png', 'image/jpg'].includes(file.type) || file.size > 5 * 1024 * 1024) {
@@ -65,6 +69,7 @@ function EditProfile({ isSm, userdata }) {
             };
             reader.readAsDataURL(file);
         }
+        setIsSaveDisabled(false);
     };
 
     const handleImageDelete = () => {
@@ -75,8 +80,11 @@ function EditProfile({ isSm, userdata }) {
         }
     };
     const handleBgImageDelete = () => {
-        setBgimg(null);
-        setDeleteBgImage(true);  // Set flag to true for deletion
+        if (!publicSong) {
+            setBgimg(null);
+            setError("");
+            setDeleteBgImage(true);  // Set flag to true for deletion
+        }
     };
 
     const handleInputChange = (e, field) => {
@@ -124,15 +132,14 @@ function EditProfile({ isSm, userdata }) {
             const file = new File([blob], "background-image.jpg", { type: mimeString });
             formData.append('bgimg', file);
         }
-
-        // Handle background image deletion (set a flag for deletion)
-        if (deleteBgImage) {
-            formData.append('deleteBgImage', 'true');
-        }
-
         // Handle profile image deletion
         if (!img && userdata?.profile?.img) {
             formData.append('deleteImage', 'true');
+        }
+
+        // Handle background image deletion (set a flag for deletion)
+        if (!bgimg && userdata?.profile?.bgimg) {
+            formData.append('deleteBgImage', 'true');
         }
 
         const authToken = window.localStorage.getItem("auto");
@@ -218,12 +225,12 @@ function EditProfile({ isSm, userdata }) {
                 </Grid>
                 <Grid item sm={9} xs={12} marginBottom={isSm ? "0px" : "10px"}>
                     <Stack spacing={1}>
-                        <label htmlFor="bgimg-upload" style={{ cursor: 'pointer', width: "70px", margin: "auto" }}>
-                            <Box sx={{ width: "70px", height: "70px", borderRadius: "50%", boxShadow: 2, overflow: 'hidden', margin: '0 auto' }}>
+                        <label htmlFor="bgimg-upload" style={{ cursor: 'pointer', width: "100%", margin: "auto" }}>
+                            <Box sx={{ width: "100%", height: "150px", boxShadow: 2, overflow: 'hidden', display: "flex", justifyContent: "center", alignItems: "center",borderRadius:"5px" }}>
                                 {bgimg ? (
                                     <img src={bgimg} alt="Background" style={{ width: '100%', height: '100%', objectFit: 'cover' }} />
                                 ) : (
-                                    <Typography sx={{ fontSize: '1rem', color: '#aaa', textAlign: 'center', lineHeight: '70px' }}>+ Add Background</Typography>
+                                    <Typography sx={{ fontSize: '1.3rem', color: '#aaa', textAlign: 'center', lineHeight: '70px' }}>+ Add Background</Typography>
                                 )}
                             </Box>
                         </label>

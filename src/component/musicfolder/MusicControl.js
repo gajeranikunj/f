@@ -10,41 +10,24 @@ const TinyText = styled(Typography)({
 });
 
 export default function MusicControl({ time, currentTime, onSliderChange }) {
-  const duration = time; // duration in seconds
-
-  function formatDuration(value) {
-    const minute = Math.floor(value / 60);
-    const secondLeft = Math.round(value - minute * 60);
-
-    return `${minute}:${secondLeft < 10 ? `0${secondLeft}` : secondLeft}`;
-  }
+  const formatTime = (timeInSeconds) => {
+    const minutes = Math.floor(timeInSeconds / 60);
+    const seconds = Math.floor(timeInSeconds % 60);
+    return `${minutes}:${seconds < 10 ? '0' : ''}${seconds}`;
+  };
 
   return (
-    <Box sx={{ width: '100%', px: 3 }}>
+    <Box sx={{ width: "100%", display: "flex", alignItems: "center", justifyContent: "center" }}>
+      <Box sx={{ color: "white", marginRight: "10px" }}>{formatTime(currentTime)}</Box>
       <Slider
-        aria-label="time-indicator"
         size="small"
-        value={currentTime} // Set the current time here
         min={0}
-        step={1}
-        max={duration}
-        onChange={onSliderChange} // Trigger the change when slider is moved
-        sx={{
-          height: 4,
-          '& .MuiSlider-thumb': {
-            width: 8,
-            height: 8,
-          },
-          '& .MuiSlider-rail': {
-            opacity: 0.28,
-          },
-        }}
+        max={time}
+        value={currentTime}
+        onChange={onSliderChange}
+        sx={{ width: "70%", color: "white" }}
       />
-
-      <Box sx={{ display: 'flex', justifyContent: 'space-between', mt: -2 ,color:"white"}}>
-        <TinyText >{formatDuration(currentTime)}</TinyText>
-        <TinyText>-{formatDuration(duration - currentTime)}</TinyText>
-      </Box>
+      <Box sx={{ color: "white", marginLeft: "10px" }}>{formatTime(time)}</Box>
     </Box>
   );
 }

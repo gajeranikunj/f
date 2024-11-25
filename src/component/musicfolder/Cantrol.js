@@ -9,7 +9,9 @@ import PauseIcon from '@mui/icons-material/Pause';
 import FastRewindIcon from '@mui/icons-material/FastRewind';
 import FastForwardIcon from '@mui/icons-material/FastForward';
 
-function Cantrol({ dataofmu, setchengmusic }) {
+function Cantrol({ dataofmu, setchengmusic, id }) {
+console.log(id);
+
     const [data, setData] = useState(dataofmu);
     const [audioDuration, setAudioDuration] = useState(null); // Audio duration
     const [volumeValue, setVolumeValue] = useState(50); // Volume level
@@ -26,8 +28,8 @@ function Cantrol({ dataofmu, setchengmusic }) {
 
     // Set the audio duration when data changes
     useEffect(() => {
-        if (data && data.music) {
-            const audio = new Audio(data.music);
+        if (data && data.audio) {
+            const audio = new Audio(data.audio);
             audio.onloadedmetadata = () => {
                 setAudioDuration(audio.duration); // Set the duration once metadata is loaded
                 setCurrentTime(0);
@@ -85,7 +87,7 @@ function Cantrol({ dataofmu, setchengmusic }) {
     // Handle audio ended (when the current music finishes)
     const handleAudioEnded = () => {
         if (setchengmusic) {
-            setchengmusic(); // Update the music in parent (set to the next music)
+            setchengmusic({ listmu: true }); // Update the music in parent (set to the next music)
         }
     };
 
@@ -94,51 +96,86 @@ function Cantrol({ dataofmu, setchengmusic }) {
             {data && (
                 <Box
                     sx={{
-                        width: window.innerWidth - 80,
-                        height: "100px",
+                        width: { xs: '100%', sm: 'calc(100% - 80px)' },
+                        height: { xs: '140px', sm: '100px' },
                         display: "flex",
-                        position: "absolute",
+                        position: "fixed",
                         alignItems: "center",
-                        bottom: "30px",
-                        left: 40,
+                        bottom: { xs: 0, sm: "30px" },
+                        left: { xs: 0, sm: 40 },
                         zIndex: "9999",
                         backgroundColor: "#202020",
+                        padding: { xs: '10px', sm: '0px' },
+                        flexDirection: { xs: 'column', sm: 'row' }
                     }}
                 >
-                    <Box sx={{ marginLeft: "20px", display: "flex", alignItems: "center", width: "100%" }}>
-                        <Box sx={{ width: "30%", display: "flex", alignItems: "center" }}>
-                            <Box component="img" sx={{ width: "70px" }} src={data.img} alt={data.name} />
-                            <Box sx={{ color: "white", fontSize: "20px", marginLeft: "20px" }}>
-                                Name: {data.name}
+                    <Box sx={{ 
+                        marginLeft: { xs: "0px", sm: "20px" }, 
+                        display: "flex", 
+                        alignItems: "center", 
+                        width: "100%",
+                        flexDirection: { xs: 'column', sm: 'row' }
+                    }}>
+                        <Box sx={{ 
+                            width: { xs: "100%", sm: "30%" }, 
+                            display: "flex", 
+                            alignItems: "center",
+                            marginBottom: { xs: '10px', sm: '0' }
+                        }}>
+                            <Box component="img" 
+                                sx={{ width: { xs: "50px", sm: "70px" } }} 
+                                src={data.img} 
+                                alt={data.name} 
+                            />
+                            <Box sx={{ 
+                                color: "white", 
+                                fontSize: { xs: "16px", sm: "20px" }, 
+                                marginLeft: "20px",
+                                whiteSpace: 'nowrap',
+                                overflow: 'hidden',
+                                textOverflow: 'ellipsis',
+                                maxWidth: { xs: '200px', sm: '300px' }
+                            }}>
+                                Name: {data.nameOfMusic}
                             </Box>
 
-                            {/* Audio element */}
-                            <Box component="audio" ref={audioRef} controls sx={{ display: "none" }} 
-                                 onTimeUpdate={handleTimeUpdate} onEnded={handleAudioEnded} autoPlay>
-                                <source src={data.music} type="audio/mpeg" />
+                            <Box component="audio" ref={audioRef} controls sx={{ display: "none" }}
+                                onTimeUpdate={handleTimeUpdate} onEnded={handleAudioEnded} autoPlay>
+                                <source src={data.audio} type="audio/mpeg" />
                             </Box>
                         </Box>
 
-                        {/* Music Control */}
-                        <Box sx={{ width: "50%" }}>
+                        <Box sx={{ 
+                            width: { xs: "100%", sm: "50%" },
+                            marginBottom: { xs: '10px', sm: '0' }
+                        }}>
                             {data && (
-                                <MusicControl time={audioDuration ? audioDuration.toFixed(2) : 'Loading...'} currentTime={currentTime} onSliderChange={handleSliderChange} />
+                                <MusicControl 
+                                    time={audioDuration ? audioDuration.toFixed(2) : 'Loading...'} 
+                                    currentTime={currentTime} 
+                                    onSliderChange={handleSliderChange} 
+                                />
                             )}
                             <Box sx={{ display: "flex", alignItems: "center", justifyContent: "center" }}>
                                 <Box sx={{ color: "white" }}>
-                                    <FastRewindIcon onClick={handleFastRewind} sx={{ color: "white", fontSize: "28px" }} />
+                                    <FastRewindIcon onClick={handleFastRewind} sx={{ color: "white", fontSize: { xs: "24px", sm: "28px" } }} />
                                     {isPlaying ? (
-                                        <PauseIcon onClick={handlePlayPause} sx={{ fontSize: "30px", color: "white" }} />
+                                        <PauseIcon onClick={handlePlayPause} sx={{ fontSize: { xs: "26px", sm: "30px" }, color: "white" }} />
                                     ) : (
-                                        <PlayArrowIcon onClick={handlePlayPause} sx={{ fontSize: "30px", color: "white" }} />
+                                        <PlayArrowIcon onClick={handlePlayPause} sx={{ fontSize: { xs: "26px", sm: "30px" }, color: "white" }} />
                                     )}
-                                    <FastForwardIcon onClick={handleFastForward} sx={{ color: "white", fontSize: "28px" }} />
+                                    <FastForwardIcon onClick={handleFastForward} sx={{ color: "white", fontSize: { xs: "24px", sm: "28px" } }} />
                                 </Box>
                             </Box>
                         </Box>
 
-                        {/* Volume control */}
-                        <Box sx={{ display: "flex", color: "white", alignItems: "center" }}>
+                        <Box sx={{ 
+                            display: "flex", 
+                            color: "white", 
+                            alignItems: "center",
+                            justifyContent: { xs: 'center', sm: 'flex-start' },
+                            width: { xs: '100%', sm: 'auto' }
+                        }}>
                             {volumeValue === 0 ? (
                                 <VolumeOffIcon sx={{ color: "white" }} />
                             ) : volumeValue < 50 ? (
@@ -154,7 +191,11 @@ function Cantrol({ dataofmu, setchengmusic }) {
                                 valueLabelDisplay="auto"
                                 value={volumeValue}
                                 onChange={handleVolumeChange}
-                                sx={{ width: "100px", marginLeft: "15px", color: "white" }}
+                                sx={{ 
+                                    width: { xs: "150px", sm: "100px" }, 
+                                    marginLeft: "15px", 
+                                    color: "white" 
+                                }}
                             />
                         </Box>
                     </Box>

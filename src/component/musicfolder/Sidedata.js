@@ -1,12 +1,12 @@
 import { Box } from '@mui/material'
-import React from 'react'
+import React, { useEffect, useState } from 'react'
 import { Swiper, SwiperSlide } from "swiper/react";
 
 // Import Swiper styles
 import "swiper/css";
 
 
-function Sidedata({ data1, setdata, data, setdataofmu }) {
+function Sidedata({ data1, setdata, data, setdataofmu ,musiclist}) {
     return (
         <>
             {data == undefined ?
@@ -36,17 +36,15 @@ function Sidedata({ data1, setdata, data, setdataofmu }) {
                             </Box>
                             <Swiper style={{ width: window.innerWidth - 370 }} watchSlidesProgress={true} slidesPerView={window.innerWidth<400?2:5} className="mySwiper">
                                 {
-                                    data1.map((item1) => (
-                                        item1.listofmusic.map((item) => (
+                                    musiclist.map((item) => (
                                             <SwiperSlide>
-                                                <Box sx={{ paddingLeft: "20px" }} onClick={() => { setdataofmu(item); setdata(item1) }}>
+                                                <Box sx={{ paddingLeft: "20px" }} onClick={() => { setdataofmu(item); }}>
                                                     <Box sx={{ width: "150px", height: "150px", backgroundImage: `url(${item.img})`, backgroundSize: "cover" }} />
                                                     <Box sx={{ color: "white" }}>
                                                         {item.name}
                                                     </Box>
                                                 </Box>
                                             </SwiperSlide>
-                                        ))
                                     ))
                                 }
 

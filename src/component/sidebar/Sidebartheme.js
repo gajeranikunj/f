@@ -9,7 +9,7 @@ import { Link } from 'react-router-dom';
 
 function Sidebartheme() {
     const [activeIndex, setActiveIndex] = useState(0);
-
+    // const ch =window.localStorage.getItem()
     const sidebardata = [
         {
             name: "home",

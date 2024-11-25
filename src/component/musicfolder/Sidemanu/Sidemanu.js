@@ -1,9 +1,32 @@
 import { Avatar, Box, IconButton, Typography } from '@mui/material'
-import React, { useState } from 'react'
+import React, { useEffect, useState } from 'react'
 import { IoMdAdd } from "react-icons/io";
 
 function Sidemanu({ setdata, data }) {
-    const [normaldata, setnormaldata] = useState(data);
+    const [normaldata, setnormaldata] = useState(data || []);
+
+    useEffect(() => {
+        if (data && data.length > 0) {
+            setnormaldata(data);
+        }
+    }, [data]);
+
+    useEffect(() => {
+        const fetchData = async () => {
+            try {
+                const response = await fetch('/api/your-endpoint');
+                const result = await response.json();
+                setnormaldata(result);
+            } catch (error) {
+                console.error('Error fetching data:', error);
+            }
+        };
+
+        if (!normaldata || normaldata.length === 0) {
+            fetchData();
+        }
+    }, []);
+
     return (
         <>
             <Box sx={{ width: "300px", height: "100%", border: "1px solid #fbfbfb21", display: { xs: "none", md: "inline-block" } }}>
@@ -43,12 +66,12 @@ function Sidemanu({ setdata, data }) {
                         </IconButton>
                     </Box>
                 </Box>
-                {normaldata && (
+                {normaldata && normaldata.length > 0 && (
                     <Box sx={{ width: "100%", color: "white", textAlign: "center", fontSize: "21px" }}>
                         Popular artists
                     </Box>
                 )}
-                {normaldata && (
+                {normaldata && normaldata.length > 0 && (
                     <Box>
                         {normaldata.map((item, index) => (
                             <Box sx={{ width: "100%", color: "white", display: "flex", alignItems: "center", paddingLeft: "15px", margin: "10px 0px", '&:hover': { backgroundColor: "#fbfbfb21", scale: "1.02" }, cursor: "pointer" }} key={index} onClick={() => setdata(item)}>

@@ -2,20 +2,23 @@ import React, { useState, useEffect } from 'react';
 import { Box, Typography, Link, Table, TableBody, TableCell, TableContainer, TableHead, TableRow } from '@mui/material';
 import Loader from './Loader';
 
-function Showdata({ list, setdataofmu, dataofmu }) {
+function Showdata({ list, setdataofmu, settog, dataofmu }) {
     const [durations, setDurations] = useState({});
-
     useEffect(() => {
-        if (list && list.listofmusic) {
+        console.log(list);
+    }, [list])
+    useEffect(() => {
+
+        if (list && list.playlists) {
             const newDurations = {};
 
-            list.listofmusic.forEach((music) => {
-                const audio = new Audio(music.music);
+            list.playlists.forEach((music) => {
+                const audio = new Audio(music.audio);
                 audio.onloadedmetadata = () => {
-                    newDurations[music.name] = audio.duration;
+                    newDurations[music._id] = audio.duration;
                     setDurations((prev) => ({
                         ...prev,
-                        [music.name]: audio.duration,
+                        [music._id]: audio.duration,
                     }));
                 };
             });
@@ -28,13 +31,18 @@ function Showdata({ list, setdataofmu, dataofmu }) {
         return `${minute}:${secondLeft < 10 ? `0${secondLeft}` : secondLeft}`;
     };
 
+    const handleMusicSelect = (audio) => {
+        settog(false);
+        setdataofmu(audio);
+    };
+
     if (!list) {
         return; // Handle the case where no data is selected
     }
 
     return (
         <Box sx={{ width: "100%", background: "linear-gradient(40deg, #DC2424, #4A569D)" }}>
-            <Box sx={{ backgroundImage: `url(${list.img2})`, height: "250px", backgroundSize: "cover", width: "80%", margin: "auto", backgroundPosition: "center", backgroundColor: "rgba(0,0,0,0.3)", backgroundBlendMode: "multiply" }}>
+            <Box sx={{ backgroundImage: `url(${list.bgimg})`, height: "250px", backgroundSize: "cover", width: "80%", margin: "auto", backgroundPosition: "center", backgroundColor: "rgba(0,0,0,0.3)", backgroundBlendMode: "multiply" }}>
                 <Box sx={{ color: 'white', fontWeight: '900', padding: "20px", marginTop: "20px", fontSize: "30px", paddingBottom: "10px" }}>
                     Name: {list.name}
                 </Box>
@@ -46,7 +54,7 @@ function Showdata({ list, setdataofmu, dataofmu }) {
                 </Box>
             </Box>
 
-            {list.listofmusic && list.listofmusic.length > 0 ? (
+            {list.playlists && list.playlists.length > 0 ? (
                 <TableContainer component={Box} sx={{ width: "80%", margin: "auto" }}>
                     <Table aria-label="simple table">
                         <TableHead>
@@ -59,10 +67,10 @@ function Showdata({ list, setdataofmu, dataofmu }) {
                             </TableRow>
                         </TableHead>
                         <TableBody>
-                            {list.listofmusic.map((music, index) => (
-                                <TableRow key={index} sx={{ borderBottom: "1px solid white " }} onClick={() => setdataofmu(music)}>
+                            {list.playlists.map((audio, index) => (
+                                <TableRow key={index} sx={{ borderBottom: "1px solid white " }} onClick={() => handleMusicSelect(audio)}>
                                     <TableCell component="th" scope="row" sx={{ textAlign: "left", color: "white", fontSize: "30px", borderBottom: "none" }}>
-                                        {dataofmu != undefined && dataofmu.name == music.name ? (
+                                        {dataofmu != undefined && dataofmu._id == audio._id ? (
                                             <Box sx={{ width: "50px", height: "50px" }}>
                                                 <Loader />
                                             </Box>
@@ -71,17 +79,17 @@ function Showdata({ list, setdataofmu, dataofmu }) {
                                         )}
                                     </TableCell>
                                     <TableCell component="th" scope="row" sx={{ textAlign: "left", display: "flex", borderBottom: "none" }}>
-                                        <Box sx={{ width: "50px" }} component="img" src={music.img} />
+                                        <Box sx={{ width: "50px" }} component="img" src={audio.img} />
                                     </TableCell>
                                     <TableCell sx={{ color: "white", borderBottom: "none" }}>
-                                        {music.name}
+                                        {audio.nameOfMusic}
                                     </TableCell>
                                     <TableCell sx={{ textAlign: "left", borderBottom: "none", color: "white" }}>
                                         {/* Displaying the time/duration */}
-                                        {durations[music.name] ? formatDuration(durations[music.name]) : 'Loading...'}
+                                        {durations[audio._id] ? formatDuration(durations[audio._id]) : 'Loading...'}
                                     </TableCell>
                                     <TableCell sx={{ textAlign: "left", borderBottom: "none" }}>
-                                        <Link href={music.music} underline="none">
+                                        <Link href={audio.audio} underline="none">
                                             <Typography variant="body1" component="a" sx={{ color: 'white' }}>
                                                 Listen
                                             </Typography>

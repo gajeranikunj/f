@@ -1,11 +1,11 @@
 const data = [
     {
         "img": "https://i.scdn.co/image/ab6761610000f178cb6926f44f620555ba444fca",
-        "img2": "https://i.scdn.co/image/ab6761860000101676e8e2934b594363af5962c1",
+        "bgimg": "https://i.scdn.co/image/ab6761860000101676e8e2934b594363af5962c1",
         "name": "Artist Name",
         "type": "singer",
         "about": "Artist bio and description",
-        "listofmusic": [
+        "playlists": [
             {
                 "name": "Song 1",
                 "img": "https://i.scdn.co/image/ab67616d00001e0252fe6875028c892308ffc2f7",
@@ -30,11 +30,11 @@ const data = [
     },
     {
         "img": "https://i.scdn.co/image/ab6761610000f178bc7e4fffd515b47ff1ebbc1f",
-        "img2": "https://i.scdn.co/image/ab6761610000f178bc7e4fffd515b47ff1ebbc1f",
+        "bgimg": "https://i.scdn.co/image/ab6761610000f178bc7e4fffd515b47ff1ebbc1f",
         "name": "Artist Name 2",
         "type": "singer",
         "about": "Artist bio and description 2",
-        "listofmusic": [
+        "playlists": [
             {
                 "name": "Song 5",
                 "img": "https://i.scdn.co/image/ab67616d00001e02aad3f4b601ae8763b3fc4e88",
