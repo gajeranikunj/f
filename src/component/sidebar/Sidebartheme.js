@@ -9,24 +9,41 @@ import { Link } from 'react-router-dom';
 
 function Sidebartheme() {
     const [activeIndex, setActiveIndex] = useState(0);
-    // const ch =window.localStorage.getItem()
-    const sidebardata = [
-        {
-            name: "home",
-            icon: <IoHomeSharp />,
-            path: "/"
-        },
-        {
-            name: "play",
-            icon: <FaCirclePlay />,
-            path: "/play"
-        },
-        {
-            name: "Add",
-            icon: <IoMdAdd />,
-            path: "/Add"
-        },
-    ]
+    const ch = window.localStorage.getItem("auto");
+    var sidebardata = [];
+    if (ch) {
+        sidebardata = [
+            {
+                name: "home",
+                icon: <IoHomeSharp />,
+                path: "/"
+            },
+            {
+                name: "play",
+                icon: <FaCirclePlay />,
+                path: "/play"
+            },
+            {
+                name: "Add",
+                icon: <IoMdAdd />,
+                path: "/Add"
+            },
+        ]
+
+    } else {
+        sidebardata = [
+            {
+                name: "home",
+                icon: <IoHomeSharp />,
+                path: "/"
+            },
+            {
+                name: "play",
+                icon: <FaCirclePlay />,
+                path: "/play"
+            }
+        ]
+    }
 
     return (
         <>
