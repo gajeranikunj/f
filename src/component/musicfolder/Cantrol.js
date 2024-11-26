@@ -100,31 +100,44 @@ function Cantrol({ dataofmu, setchengmusic, id }) {
         setAnchorEl(event.currentTarget);
     };
 
+    const [to, setto] = useState(false)
     const handleClose = () => {
+        setto(false)
         setAnchorEl(null);
     };
-
     const handleAddClick = async () => {
         console.log('Music ID:', id);
-    
+
         try {
             const response = await axios.post(
                 `http://localhost:3005/profile/addinlist`,
-                {id:id}, // Empty object for the request body
+                { id: id }, // Sending the ID as part of the request body
                 {
                     headers: {
-                        'Authorization': authToken, // Pass headers in the correct place
+                        'Authorization': authToken, // Pass the Authorization header
                     },
                 }
             );
             console.log(response.data);
+            console.log(response);
+
+            // Check if the response contains a success message
+            if (response.data.status == "success") {
+                console.log("Item successfully added.");
+                setto(true);
+                setTimeout(() => {
+                    handleClose(); // Close the modal or dialog
+                }, 1000)
+            } else {
+                // Handle failure case
+                // handleClose(); // Close the modal or dialog
+                console.log("Failed to add item.");
+            }
         } catch (error) {
             console.error('Error fetching data:', error);
         }
-    
-        handleClose();
+
     };
-    
 
     return (
         <>
@@ -250,13 +263,17 @@ function Cantrol({ dataofmu, setchengmusic, id }) {
                                     vertical: 'bottom',
                                     horizontal: 'left',
                                 }}
-                                sx={{ zIndex: "9999" }}
+                                sx={{ zIndex: "9999", padding: "0px !important" }}
                             >
-                                <MenuItem onClick={handleAddClick}>
+                                <MenuItem
+                                    onClick={handleAddClick}
+                                    sx={{ backgroundColor:to? "green !important":"white !important" }}
+                                >
                                     <AddIcon sx={{ mr: 1 }} />
                                     Add to Playlist
                                 </MenuItem>
                             </Menu>
+
                         </>
                     </Box>
                 </Box>
